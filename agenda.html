@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Agendamentos - AgendeJá</title>
+  <style>
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 10px;
+      width: 200px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <h2>Lista de Agendamentos</h2>
+  <div id="agendamentos" class="container"></div>
+
+  <script>
+    async function carregarAgendamentos() {
+      try {
+        const resposta = await fetch("http://localhost:8080/api/agendamentos");
+        const dados = await resposta.json();
+        const container = document.getElementById("agendamentos");
+        container.innerHTML = "";
+        dados.forEach(agendamento => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <strong>Sala:</strong> ${agendamento.sala} <br>
+            <strong>Agendamento:</strong> ${agendamento.descricao} <br>
+            <strong>Agendado por:</strong> ${agendamento.usuario} <br>
+            <strong>Horário:</strong> ${agendamento.horarioInicio} às ${agendamento.horarioFim}
+          `;
+          container.appendChild(card);
+        });
+      } catch (erro) {
+        console.error("Erro ao carregar agendamentos:", erro);
+      }
+    }
+    window.onload = carregarAgendamentos;
+  </script>
+</body>
+</html>
