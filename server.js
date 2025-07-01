@@ -1,22 +1,27 @@
-
 const express = require('express');
 const fs = require('fs');
-const app = express();
 const cors = require('cors');
+const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/agendamentos', (req, res) => {
-  const data = fs.readFileSync('agendamentos.json');
-  res.json(JSON.parse(data));
+const filePath = __dirname + '/db.json';
+
+// Buscar reservas
+app.get('/reservas', (req, res) => {
+  const data = JSON.parse(fs.readFileSync(filePath));
+  res.json(data);
 });
 
-app.post('/api/agendamentos', (req, res) => {
-  const novo = req.body;
-  const agendamentos = JSON.parse(fs.readFileSync('agendamentos.json'));
-  agendamentos.push(novo);
-  fs.writeFileSync('agendamentos.json', JSON.stringify(agendamentos, null, 2));
-  res.status(200).send({ mensagem: 'Agendamento realizado com sucesso!' });
+// Adicionar nova reserva
+app.post('/reservas', (req, res) => {
+  const data = JSON.parse(fs.readFileSync(filePath));
+  data.push(req.body);
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  res.json({ sucesso: true });
 });
 
-app.listen(8080, () => console.log('Servidor rodando na porta 8080'));
+app.listen(3000, () => {
+  console.log('Servidor rodando em http://localhost:3000');
+});
