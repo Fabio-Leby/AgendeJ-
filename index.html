@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Agendamento de Recursos Escolares</title>
+</head>
+<body>
+  <h1>Agendamento de Recursos Escolares</h1>
+  <form id="form-reserva">
+    <input type="text" placeholder="Seu nome" id="nome" required>
+    <select id="recurso">
+      <option value="Sala 101">Sala 101</option>
+      <option value="Laboratório">Laboratório</option>
+      <option value="Projetor">Projetor</option>
+    </select>
+    <input type="date" id="data" required>
+    <input type="time" id="hora" required>
+    <button type="submit">Agendar</button>
+  </form>
+  <div id="reservas"></div>
+
+  <script>
+    document.getElementById("form-reserva").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const nome = document.getElementById("nome").value;
+      const recurso = document.getElementById("recurso").value;
+      const data = document.getElementById("data").value;
+      const hora = document.getElementById("hora").value;
+
+      await fetch("http://localhost:3000/reservas", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ nome, recurso, data, hora })
+      });
+
+      alert("Reserva realizada com sucesso!");
+    });
+  </script>
+</body>
+</html>
